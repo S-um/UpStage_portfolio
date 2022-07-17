@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyter-controller
+  labels:
+    project: secu
+    system: controller
+    component: jupyter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: secu
+      system: controller
+      component: jupyter
+  template:
+    metadata:
+      labels:
+        project: secu
+        system: controller
+        component: jupyter
+    spec:
+      serviceAccountName: jupyter-controller
+      containers:
+      - name: jupyter-controller
+        image: myoon/jupyter-controller:0.0.5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter-controller
+  labels:
+    project: secu
+    system: controller
+    component: jupyter
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    project: secu
+    system: controller
+    component: jupyter

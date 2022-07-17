@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: jupyter-controller
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - pods
+      - persistentvolumeclaims
+    verbs:
+      - '*'
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - '*'
