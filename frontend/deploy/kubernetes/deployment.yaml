@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: upstage-front
-        image: myoon/upstage-front:t0.0.7
+        image: myoon/upstage-front:t0.0.8
 ---
 apiVersion: v1
 kind: Service

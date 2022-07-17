@@ -1,5 +1,5 @@
 IMAGE_NAME=myoon/upstage-front
-VERSION=t0.0.7
+VERSION=t0.0.8
 
 IMG=${IMAGE_NAME}:${VERSION}
 
