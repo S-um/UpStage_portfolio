@@ -7,13 +7,13 @@
 
 ```
 URL
-https://myeongsuk_yoon.upstage.ml
+https://upstage.ga
 
 계정 정보
-ID : myeongsuk_yoon@upstage.ai
-PWD : upstage_admin
+ID : myeongsuk@upstage.ai
+PWD : <이력서 참고>
 ```
-ps) 위 계정 정보의 이메일 주소는 해당 시스템 내에서만 존재하며 실제로 동작하지 않는 이메일 주소입니다.
+ps) 위 계정 정보의 이메일 주소는 해당 시스템 내에서만 존재하며 실제로 존재하지 않는 이메일 주소입니다.
 
 ## 해당 포트폴리오를 통해 나타내고픈 점
 
