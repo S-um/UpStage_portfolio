@@ -100,7 +100,7 @@ const skillItems = [{
     <p>수준 : 중상</p>
   </div>,
 }, {
-  title: "Marchine Learning",
+  title: "Machine Learning",
   body: <div>
     <p>최근에 관심을 가지게 되어 공부를 시작하여 간단한 예제를 따라해보며 이론 공부 중에 있습니다.</p>
     <p>수준 : 하</p>
