@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    project: secu
+    system: ory
+    component: kratos
+  name: kratos
+spec:
+  ports:
+    - name: "4433"
+      port: 4433
+      targetPort: 4433
+    - name: "4434"
+      port: 4434
+      targetPort: 4434
+  selector:
+    project: secu
+    system: ory
+    component: kratos

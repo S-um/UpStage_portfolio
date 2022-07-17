@@ -1,0 +1,64 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: myoon-certs
+  namespace: istio-system
+spec:
+  dnsNames:
+  - upstage.ga
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-myoon-prod
+  secretName: myoon-certs
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: auth-myoon-certs
+  namespace: istio-system
+spec:
+  dnsNames:
+  - auth.upstage.ga
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-myoon-prod
+  secretName: auth-myoon-certs
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: login-myoon-certs
+  namespace: istio-system
+spec:
+  dnsNames:
+  - login.upstage.ga
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-myoon-prod
+  secretName: login-myoon-certs
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: email-myoon-certs
+  namespace: istio-system
+spec:
+  dnsNames:
+  - email.upstage.ga
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-myoon-prod
+  secretName: email-myoon-certs
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: notebook-myoon-certs
+  namespace: istio-system
+spec:
+  dnsNames:
+  - notebook.upstage.ga
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-myoon-prod
+  secretName: notebook-myoon-certs

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jupyter
+  labels:
+    run: jupyter
+spec:
+  containers:
+  - image: jupyter/datascience-notebook
+    name: jupyter
+    command: ["jupyter", "notebook", "--NotebookApp.base_url=/notebook/upstage-notebook"]
+    ports:
+    - containerPort: 8888

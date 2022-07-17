@@ -1,0 +1,83 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kratos-selfservice-ui-node
+spec:
+  gateways:
+  - login-myoon-gateway
+  hosts:
+  - login.upstage.ga
+  http:
+  - route:
+    - destination:
+        host: kratos-selfservice-ui-node
+        port:
+          number: 4455
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kratos
+spec:
+  gateways:
+  - auth-myoon-gateway
+  hosts:
+  - auth.upstage.ga
+  http:
+  - route:
+    - destination:
+        host: kratos
+        port:
+          number: 4433
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: web
+spec:
+  gateways:
+  - myoon-gateway
+  hosts:
+  - upstage.ga
+  http:
+  - match:
+    - uri:
+        prefix: /notebook
+    - uri:
+        prefix: /api
+    route:
+    - destination:
+        host: oathkeeper
+        port:
+          number: 8080
+  - match:
+    - uri:
+        prefix: /sessions
+    - uri:
+        prefix: /self-service
+    route:
+    - destination:
+        host: kratos
+        port:
+          number: 4433
+  - route:
+    - destination:
+        host: default-frontend
+        port:
+          number: 3000
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: email
+spec:
+  gateways:
+  - email-myoon-gateway
+  hosts:
+  - email.upstage.ga
+  http:
+  - route:
+    - destination:
+        host: mailslurper
+        port:
+          number: 4436

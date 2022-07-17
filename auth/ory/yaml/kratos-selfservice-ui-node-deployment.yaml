@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    project: secu
+    system: ory
+    component: kratos-selfservice-ui-node
+  name: kratos-selfservice-ui-node
+spec:
+  selector:
+    matchLabels:
+      project: secu
+      system: ory
+      component: kratos-selfservice-ui-node
+  template:
+    metadata:
+      labels:
+        project: secu
+        system: ory
+        component: kratos-selfservice-ui-node
+    spec:
+      containers:
+        - env:
+            - name: KRATOS_BROWSER_URL
+              value: https://auth.upstage.ga/
+            - name: KRATOS_PUBLIC_URL
+              value: http://kratos:4433/
+          image: oryd/kratos-selfservice-ui-node:latest
+          name: kratos-selfservice-ui-node
+          ports:
+            - containerPort: 3000

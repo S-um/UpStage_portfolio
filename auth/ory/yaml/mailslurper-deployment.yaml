@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    project: secu
+    system: ory
+    component: mailslurper
+  name: mailslurper
+spec:
+  selector:
+    matchLabels:
+      project: secu
+      system: ory
+      component: mailslurper
+  template:
+    metadata:
+      labels:
+        project: secu
+        system: ory
+        component: mailslurper
+    spec:
+      containers:
+        - image: oryd/mailslurper:latest-smtps
+          name: mailslurper
+          ports:
+            - containerPort: 4436
+            - containerPort: 4437

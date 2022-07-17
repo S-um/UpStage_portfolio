@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    project: secu
+    system: ory
+    component: oathkeeper
+  name: oathkeeper
+spec:
+  selector:
+    matchLabels:
+      project: secu
+      system: ory
+      component: oathkeeper
+  template:
+    metadata:
+      labels:
+        project: secu
+        system: ory
+        component: oathkeeper
+    spec:
+      containers:
+        - args:
+            - serve
+            - proxy
+            - -c
+            - /etc/config/oathkeeper/oathkeeper.yml
+          env:
+            - name: LOG_LEVEL
+              value: debug
+          image: oryd/oathkeeper:latest
+          name: oathkeeper
+          ports:
+            - containerPort: 4455
+            - containerPort: 4456
+          volumeMounts:
+            - mountPath: /etc/config/oathkeeper/
+              name: oathkeeper-config
+      volumes:
+        - name: oathkeeper-config
+          configMap:
+            name: oathkeeper-config

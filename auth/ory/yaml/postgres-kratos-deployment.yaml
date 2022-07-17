@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    project: secu
+    system: ory
+    component: postgres-kratos
+  name: postgres-kratos
+spec:
+  selector:
+    matchLabels:
+      project: secu
+      system: ory
+      component: postgres-kratos
+  template:
+    metadata:
+      labels:
+        project: secu
+        system: ory
+        component: postgres-kratos
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: kratos
+            - name: POSTGRES_PASSWORD
+              value: secret
+            - name: POSTGRES_USER
+              value: kratos
+          image: postgres:9.6
+          name: postgres-kratos

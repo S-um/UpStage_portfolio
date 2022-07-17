@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    project: secu
+    system: ory
+    component: keto
+  name: keto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: secu
+      system: ory
+      component: keto
+  template:
+    metadata:
+      labels:
+        project: secu
+        system: ory
+        component: keto
+    spec:
+      containers:
+        - args:
+            - serve
+            - -c
+            - /home/ory/keto.yml
+          image: oryd/keto:v0.8.0-alpha.2
+          name: keto
+          ports:
+            - containerPort: 4466
+            - containerPort: 4467
+          resources: {}
+          volumeMounts:
+            - mountPath: /home/ory/
+              name: keto-config
+      restartPolicy: Always
+      volumes:
+        - name: keto-config
+          configMap:
+            name: keto-config

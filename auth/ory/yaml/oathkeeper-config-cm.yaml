@@ -1,0 +1,182 @@
+apiVersion: v1
+data:
+  access-rules.yml: |
+    - id: 'api:notebook'
+      upstream:
+        preserve_host: true
+          # url: 'https://notebook.upstage.ga'
+        url: 'http://upstage-notebook:8888'
+      match:
+        url: "https://upstage.ga/notebook/<[^/]*>/<.*>"
+        methods:
+          - GET
+          - PUT
+          - DELETE
+          - PATCH
+          - POST
+      authenticators:
+        - handler: cookie_session
+      mutators:
+        - handler: header
+      authorizer:
+        handler: remote_json
+        config:
+          remote: http://keto:4466/check
+          # TODO update payload
+          payload: |
+            {
+              "subject_id": "{{ print .Subject }}",
+              "relation": "access",
+              "namespace": "jupyter",
+              "object": "{{ printIndex .MatchContext.RegexpCaptureGroups 0 }}"
+            }
+
+      errors:
+        - handler: redirect
+          config:
+            when:
+            - error: ["forbidden"]
+            to: https://upstage.ga
+        - handler: redirect
+          config:
+            when:
+            - error: ["unauthorized"]
+            to: https://login.upstage.ga/login
+
+    - id: 'api:jupytercontroller'
+      upstream:
+        preserve_host: true
+        url: 'http://jupyter-controller:8080'
+      match:
+        url: "https://upstage.ga/api/notebook<.*>"
+        methods:
+          - GET
+          - PUT
+          - DELETE
+          - PATCH
+          - POST
+      authenticators:
+        - handler: cookie_session
+      mutators:
+        - handler: header
+      authorizer:
+        handler: remote_json
+        config:
+          remote: http://keto:4466/check
+          # TODO update payload
+          payload: |
+            {
+              "subject_id": "{{ print .Subject }}",
+              "relation": "access",
+              "namespace": "api",
+              "object": "notebook"
+            }
+
+      errors:
+        - handler: json
+          config:
+            when:
+            - error: ["forbidden", "unauthorized"]
+  oathkeeper.yml: |+
+    log:
+      level: debug
+      format: json
+
+    serve:
+      proxy:
+        cors:
+          enabled: true
+          allowed_origins:
+            - "*"
+          allowed_methods:
+            - "GET"
+            - "HEAD"
+            - "POST"
+            - "PUT"
+            - "DELETE"
+            - "PATCH"
+          allowed_headers:
+            - Authorization
+            - Content-Type
+          exposed_headers:
+            - Content-Type
+          allow_credentials: true
+          debug: true
+
+    errors:
+      fallback:
+        - json
+
+      handlers:
+        redirect:
+          enabled: true
+          config:
+            to: http://127.0.0.1:4455/login
+            when:
+              - error:
+                  - unauthorized
+                  - forbidden
+                request:
+                  header:
+                    accept:
+                      - text/html
+        json:
+          enabled: true
+          config:
+            verbose: true
+
+    access_rules:
+      matching_strategy: regexp
+      # matching_strategy: glob
+      repositories:
+        - file:///etc/config/oathkeeper/access-rules.yml
+
+    authenticators:
+      anonymous:
+        enabled: true
+        config:
+          subject: guest
+
+      cookie_session:
+        enabled: true
+        config:
+          check_session_url: http://kratos:4433/sessions/whoami
+          preserve_path: true
+          extra_from: '@this'
+          subject_from: 'identity.id'
+          only:
+            - ory_kratos_session
+
+      noop:
+        enabled: true
+
+    authorizers:
+      allow:
+        enabled: true
+
+      remote_json:
+        enabled: true
+        config:
+          remote: http://keto:4466/check
+          payload: |
+            { }
+          forward_response_headers_to_upstream:
+            - X-Foo
+          retry:
+            max_delay: 1s
+            give_up_after: 1s
+
+    mutators:
+      noop:
+        enabled: true
+      header:
+        # Set enabled to true if the authenticator should be enabled and false to disable the authenticator. Defaults to false.
+        enabled: true
+        config:
+          headers:
+            X-User: '{{ print .Subject }}'
+
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: oathkeeper-config

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    project: secu
+    system: ory
+    component: keto
+  name: keto
+spec:
+  ports:
+    - name: "4466"
+      port: 4466
+      targetPort: 4466
+    - name: "4467"
+      port: 4467
+      targetPort: 4467
+  selector:
+    project: secu
+    system: ory
+    component: keto

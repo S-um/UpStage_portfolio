@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    project: secu
+    system: ory
+    component: kratos
+  name: kratos
+spec:
+  selector:
+    matchLabels:
+      project: secu
+      system: ory
+      component: kratos
+  template:
+    metadata:
+      labels:
+        project: secu
+        system: ory
+        component: kratos
+    spec:
+      containers:
+        - args:
+            - serve
+            - -c
+            - /etc/config/kratos/kratos.yml
+            - --dev
+            - --watch-courier
+          env:
+            - name: DSN
+              value: postgres://kratos:secret@postgres-kratos:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+          image: oryd/kratos:v0.8.0-alpha.3
+          name: kratos
+          ports:
+            - containerPort: 4433
+            - containerPort: 4434
+          volumeMounts:
+            - mountPath: /etc/config/kratos
+              name: kratos-config
+      restartPolicy: Always
+      volumes:
+        - name: kratos-config
+          configMap:
+            name: kratos-config

@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-myoon-prod
+spec:
+  acme:
+    preferredChain: ""
+    privateKeySecretRef:
+      name: letsencrypt-myoon-prod
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+    - dns01:
+        route53:
+          accessKeyID: AKIAWHS6IDPL6ZLEXP5F
+          hostedZoneID: Z0717669MIKD7CYXDYBB
+          region: ap-northeast-2
+          secretAccessKeySecretRef:
+            key: secret-access-key
+            name: myoon-prod-route53-credentials-secret
+      selector:
+        dnsZones:
+        - upstage.ga

@@ -1,0 +1,76 @@
+- id: 'api:notebook'
+  upstream:
+    preserve_host: true
+      # url: 'https://notebook.upstage.ga'
+    url: 'http://upstage-notebook:8888'
+  match:
+    url: "https://upstage.ga/notebook/<[^/]*>/<.*>"
+    methods:
+      - GET
+      - PUT
+      - DELETE
+      - PATCH
+      - POST
+  authenticators:
+    - handler: cookie_session
+  mutators:
+    - handler: header
+  authorizer:
+    handler: remote_json
+    config:
+      remote: http://keto:4466/check
+      # TODO update payload
+      payload: |
+        {
+          "subject_id": "{{ print .Subject }}",
+          "relation": "access",
+          "namespace": "jupyter",
+          "object": "{{ printIndex .MatchContext.RegexpCaptureGroups 0 }}"
+        }
+
+  errors:
+    - handler: redirect
+      config:
+        when:
+        - error: ["forbidden"]
+        to: https://upstage.ga
+    - handler: redirect
+      config:
+        when:
+        - error: ["unauthorized"]
+        to: https://login.upstage.ga/login
+
+- id: 'api:jupytercontroller'
+  upstream:
+    preserve_host: true
+    url: 'http://jupyter-controller:8080'
+  match:
+    url: "https://upstage.ga/api/notebook<.*>"
+    methods:
+      - GET
+      - PUT
+      - DELETE
+      - PATCH
+      - POST
+  authenticators:
+    - handler: cookie_session
+  mutators:
+    - handler: header
+  authorizer:
+    handler: remote_json
+    config:
+      remote: http://keto:4466/check
+      # TODO update payload
+      payload: |
+        {
+          "subject_id": "{{ print .Subject }}",
+          "relation": "access",
+          "namespace": "api",
+          "object": "notebook"
+        }
+
+  errors:
+    - handler: json
+      config:
+        when:
+        - error: ["forbidden", "unauthorized"]

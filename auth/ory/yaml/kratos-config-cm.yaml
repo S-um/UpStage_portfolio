@@ -1,0 +1,153 @@
+apiVersion: v1
+data:
+  identity.schema.json: |+
+    {
+      "$id": "https://schemas.ory.sh/presets/kratos/quickstart/email-password/identity.schema.json",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Person",
+      "type": "object",
+      "properties": {
+        "traits": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "title": "E-Mail",
+              "minLength": 3,
+              "ory.sh/kratos": {
+                "credentials": {
+                  "password": {
+                    "identifier": true
+                  }
+                },
+                "verification": {
+                  "via": "email"
+                },
+                "recovery": {
+                  "via": "email"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "first": {
+                  "title": "First Name",
+                  "type": "string"
+                },
+                "last": {
+                  "title": "Last Name",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "email"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+
+  kratos.yml: |
+    version: v0.7.1-alpha.1
+
+    dsn: memory
+
+    serve:
+      public:
+        base_url: https://auth.upstage.ga/
+        cors:
+          enabled: true
+          allowed_origins:
+            - "https://upstage.ai"
+          allowed_methods:
+            - GET
+            - OPTIONS
+            - PUT
+            - PATCH
+            - DELETE
+      admin:
+        base_url: https://kratos:4434/
+
+    selfservice:
+      default_browser_return_url: https://upstage.ga/
+      whitelisted_return_urls:
+        - https://login.upstage.ga
+
+      methods:
+        password:
+          enabled: true
+
+      flows:
+        error:
+          ui_url: https://login.upstage.ga/error
+
+        settings:
+          ui_url: https://login.upstage.ga/settings
+          privileged_session_max_age: 15m
+
+        recovery:
+          enabled: true
+          ui_url: https://login.upstage.ga/recovery
+
+        verification:
+          enabled: true
+          ui_url: https://login.upstage.ga/verification
+          after:
+            default_browser_return_url: https://login.upstage.ga/
+
+        logout:
+          after:
+            default_browser_return_url: https://upstage.ga/
+
+        login:
+          ui_url: https://login.upstage.ga/login
+          lifespan: 10m
+
+        registration:
+          lifespan: 10m
+          ui_url: https://login.upstage.ga/registration
+          after:
+            password:
+              hooks:
+                - hook: session
+
+    log:
+      level: debug
+      format: text
+      leak_sensitive_values: true
+
+    secrets:
+      cookie:
+        - PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
+      cipher:
+        - 32-LONG-SECRET-NOT-SECURE-AT-ALL
+
+    ciphers:
+      algorithm: xchacha20-poly1305
+
+    hashers:
+      algorithm: bcrypt
+      bcrypt:
+        cost: 8
+
+    identity:
+      default_schema_url: file:///etc/config/kratos/identity.schema.json
+
+    courier:
+      smtp:
+        connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true
+
+    cookies:
+      domain: upstage.ga
+
+    session:
+      cookie:
+        domain: upstage.ga
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: kratos-config

@@ -1,0 +1,129 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: myoon-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - 'upstage.ga'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+  - hosts:
+    - 'upstage.ga'
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName: myoon-certs
+      mode: SIMPLE
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: login-myoon-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - 'login.upstage.ga'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+  - hosts:
+    - 'login.upstage.ga'
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName: login-myoon-certs
+      mode: SIMPLE
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: auth-myoon-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - 'auth.upstage.ga'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+  - hosts:
+    - 'auth.upstage.ga'
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName: auth-myoon-certs
+      mode: SIMPLE
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: email-myoon-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - 'email.upstage.ga'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+  - hosts:
+    - 'email.upstage.ga'
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName: email-myoon-certs
+      mode: SIMPLE
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: notebook-myoon-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - 'notebook.upstage.ga'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+  - hosts:
+    - 'notebook.upstage.ga'
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName: notebook-myoon-certs
+      mode: SIMPLE

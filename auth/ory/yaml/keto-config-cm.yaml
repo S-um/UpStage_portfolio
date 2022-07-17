@@ -1,0 +1,27 @@
+apiVersion: v1
+data:
+  keto.yml: |
+    version: v0.8.0-alpha.2
+
+    log:
+      level: debug
+
+    namespaces:
+      - id: 0
+        name: jupyter
+      - id: 1
+        name: api
+
+    serve:
+      read:
+        host: 0.0.0.0
+        port: 4466
+      write:
+        host: 0.0.0.0
+        port: 4467
+
+    dsn: memory
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: keto-config
