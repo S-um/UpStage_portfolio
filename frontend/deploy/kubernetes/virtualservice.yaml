@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: web-front
+spec:
+  gateways:
+  - myoon-gateway
+  hosts:
+  - upstage.ga
+  http:
+  - route:
+    - destination:
+        host: default-frontend
+        port:
+          number: 3000

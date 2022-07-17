@@ -15,7 +15,7 @@
     font-weight: 300 !important;
     background-color: #AE8CF5 !important;
     border: none !important;
-    padding: 10px 20px !important;
+    padding: 10px 20px;
 }
 
 .innerText {
@@ -26,10 +26,13 @@
 
 .divider {
     background-color: white !important;
-    margin-top: 10px !important;
     margin-bottom: 20px !important;
     height: 1px !important;
     opacity: 100% !important;
+}
+
+.withoutDesription {
+    margin-top: 10px !important;
 }
 
 .accordianElem {
@@ -44,4 +47,10 @@
 
 .skillBody {
     margin-top: 10px;
+}
+
+.description {
+    font-weight: 100;
+    margin-bottom: 8px;
+    margin-top: 0px;
 }

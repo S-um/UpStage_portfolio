@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: default-frontend
+  labels:
+    project: secu
+    system: frontend
+    component: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: secu
+      system: frontend
+      component: default
+  template:
+    metadata:
+      labels:
+        project: secu
+        system: frontend
+        component: default
+    spec:
+      containers:
+      - name: upstage-front
+        image: myoon/upstage-front:t0.0.7
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: default-frontend
+  labels:
+    project: secu
+    system: frontend
+    component: default
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+  selector:
+    project: secu
+    system: frontend
+    component: default
